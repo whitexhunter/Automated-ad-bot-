@@ -928,16 +928,15 @@ async def help_command(ctx):
     embed.set_footer(text="Bot will automatically restart schedules on reboot")
     await ctx.send(embed=embed)
 
+# ========== KEEP ALIVE SETUP ==========
+keep_alive()
+
 # ========== RUN BOT ==========
 if __name__ == "__main__":
     print("=" * 50)
     print("🤖 Discord Auto-Messaging Bot")
     print("=" * 50)
-    print("📁 Data Files:")
-    print(f"  • Config: {CONFIG_FILE}")
-    print(f"  • User Data: {USER_DATA_FILE}")
-    print(f"  • Logs: {LOG_FILE}")
-    print("\n👑 Admin Users:", ADMIN_USER_IDS)
+    print(f"👑 Admin Users: {ADMIN_USER_IDS}")
     print("\n🚀 Starting bot...")
     
     # Create data files if they don't exist
