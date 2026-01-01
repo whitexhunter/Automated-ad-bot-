@@ -1,43 +1,22 @@
-import os
+import discord
+from discord.ext import commands, tasks
+import asyncio
 import json
+import os
+import datetime
+import traceback
+from typing import Dict, List, Optional
+from collections import defaultdict
 
-# ========== RAILWAY CONFIG ==========
-# Use Railway environment variable
-BOT_TOKEN = os.environ['DISCORD_BOT_TOKEN']
+# ========== CONFIGURATION ==========
+BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
+ADMIN_USER_IDS = [int(id.strip()) for id in os.getenv('ADMIN_USER_IDS', '').split(',') if id.strip()]
+CONFIG_FILE = '/data/auto_messenger_config.json'
+USER_DATA_FILE = '/data/user_configs.json'
+LOG_FILE = '/data/messenger_logs.json'
 
-# Use Railway persistent storage
-DATA_DIR = '/data'
-CONFIG_FILE = f'{DATA_DIR}/auto_messenger_config.json'
-USER_DATA_FILE = f'{DATA_DIR}/user_configs.json'
-LOG_FILE = f'{DATA_DIR}/messenger_logs.json'
-
-# Create data directory if it doesn't exist
-os.makedirs(DATA_DIR, exist_ok=True)
-
-# ⚠️ REPLACE WITH YOUR DISCORD USER ID ⚠️
-ADMIN_USER_IDS = [999664473101058168]  # Change this!
-
-# ========== ADD HEALTH CHECK ENDPOINT ==========
-from flask import Flask, Response
-import threading
-
-# Create Flask app for health checks
-app = Flask(__name__)
-
-@app.route('/health')
-def health_check():
-    return Response('{"status": "ok"}', status=200, mimetype='application/json')
-
-@app.route('/')
-def home():
-    return "🤖 Discord Auto-Messenger Bot is running on Railway!"
-
-def run_flask():
-    app.run(host='0.0.0.0', port=8080)
-
-# Start Flask in background thread
-flask_thread = threading.Thread(target=run_flask, daemon=True)
-flask_thread.start()
+# Ensure data directory exists
+os.makedirs('/data', exist_ok=True)
 
 # ========== SETUP BOT ==========
 intents = discord.Intents.default()
