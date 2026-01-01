@@ -106,7 +106,7 @@ class UserAccountManager:
         self.user_clients[user_id] = client
         
         # Start client in background
-        asyncio.create_task(client.start(token, bot=False))
+        asyncio.create_task(client.start(token))
         
         # Wait for login
         await asyncio.sleep(5)
@@ -337,7 +337,7 @@ async def setup_command(ctx):
                 login_success = True
             
             # Try to login
-            login_task = asyncio.create_task(test_client.start(user_token, bot=False))
+            login_task = asyncio.create_task(test_client.start(user_token))
             await asyncio.sleep(5)
             
             if login_success:
