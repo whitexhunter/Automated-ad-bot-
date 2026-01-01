@@ -4,17 +4,22 @@ import asyncio
 import json
 import os
 import datetime
-import re
-from typing import Dict, List, Optional
 import traceback
-from collections import defaultdict
 
 # ========== CONFIGURATION ==========
-BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN', 'your-bot-token-here')
-ADMIN_USER_IDS = [123456789012345678, 987654321098765432]  # Add your Discord user IDs here
+# Railway will set this as environment variable
+BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
+
+# ADD YOUR DISCORD USER ID HERE (get it from Discord):
+# To get your ID: Discord Settings → Advanced → Enable Developer Mode
+# Right-click your profile → Copy ID
+ADMIN_USER_IDS = [999664473101058168]  # REPLACE WITH YOUR DISCORD ID
+
 CONFIG_FILE = 'auto_messenger_config.json'
 USER_DATA_FILE = 'user_configs.json'
 LOG_FILE = 'messenger_logs.json'
+
+# ========== REST OF THE CODE CONTINUES... ==========
 
 # ========== SETUP BOT ==========
 intents = discord.Intents.default()
