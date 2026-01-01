@@ -6,6 +6,8 @@ __pycache__/
 env/
 venv/
 *.env
-data/
 /tmp/
+data/
 config.json
+user_tokens.json
+schedules.json
