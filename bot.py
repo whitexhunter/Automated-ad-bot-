@@ -933,9 +933,6 @@ async def help_command(ctx):
     embed.set_footer(text="Bot will automatically restart schedules on reboot")
     await ctx.send(embed=embed)
 
-# ========== KEEP ALIVE SETUP ==========
-keep_alive()
-
 # ========== RUN BOT ==========
 if __name__ == "__main__":
     print("=" * 50)
