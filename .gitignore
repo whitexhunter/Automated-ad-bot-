@@ -1,8 +1,10 @@
 __pycache__/
 *.pyc
 *.pyo
-.env
-.env.local
-secrets.json
-/data/*.json
-!keep_data.txt
+*.pyd
+.Python
+env/
+venv/
+*.env
+data/
+config.json
