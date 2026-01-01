@@ -689,12 +689,6 @@ if __name__ == "__main__":
         print("❌ Invalid bot token. Check DISCORD_BOT_TOKEN environment variable.")
     except KeyboardInterrupt:
         print("\n🛑 Bot stopped by user")
-        # Clean up user clients
-        for user_id, client in manager.user_clients.items():
-            try:
-                await client.close()
-            except:
-                pass
     except Exception as e:
         print(f"❌ Error: {e}")
         traceback.print_exc()
