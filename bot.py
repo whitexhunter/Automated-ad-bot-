@@ -11,12 +11,15 @@ from collections import defaultdict
 # ========== CONFIGURATION ==========
 BOT_TOKEN = os.getenv('DISCORD_BOT_TOKEN')
 ADMIN_USER_IDS = [int(id.strip()) for id in os.getenv('ADMIN_USER_IDS', '').split(',') if id.strip()]
-CONFIG_FILE = '/data/auto_messenger_config.json'
-USER_DATA_FILE = '/data/user_configs.json'
-LOG_FILE = '/data/messenger_logs.json'
+
+# Railway uses /tmp for ephemeral storage
+DATA_DIR = '/tmp/data' if os.path.exists('/tmp') else './data'
+CONFIG_FILE = f'{DATA_DIR}/auto_messenger_config.json'
+USER_DATA_FILE = f'{DATA_DIR}/user_configs.json'
+LOG_FILE = f'{DATA_DIR}/messenger_logs.json'
 
 # Ensure data directory exists
-os.makedirs('/data', exist_ok=True)
+os.makedirs(DATA_DIR, exist_ok=True)
 
 # ========== SETUP BOT ==========
 intents = discord.Intents.default()
