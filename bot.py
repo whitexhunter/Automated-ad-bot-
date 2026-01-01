@@ -7,19 +7,20 @@ import datetime
 import traceback
 
 # ========== CONFIGURATION ==========
-# Railway will set this as environment variable
-BOT_TOKEN = os.environ.get('DISCORD_BOT_TOKEN')
-
-# ADD YOUR DISCORD USER ID HERE (get it from Discord):
-# To get your ID: Discord Settings → Advanced → Enable Developer Mode
-# Right-click your profile → Copy ID
+BOT_TOKEN = os.environ['DISCORD_BOT_TOKEN']
+# ADD YOUR DISCORD USER ID HERE (get from Discord: right-click profile → Copy ID):
 ADMIN_USER_IDS = [999664473101058168]  # REPLACE WITH YOUR DISCORD ID
+CONFIG_FILE = '/data/auto_messenger_config.json'
+USER_DATA_FILE = '/data/user_configs.json'
+LOG_FILE = '/data/messenger_logs.json'
 
-CONFIG_FILE = 'auto_messenger_config.json'
-USER_DATA_FILE = 'user_configs.json'
-LOG_FILE = 'messenger_logs.json'
+# Ensure data directory exists
+os.makedirs('/data', exist_ok=True)
 
-# ========== REST OF THE CODE CONTINUES... ==========
+intents = discord.Intents.default()
+intents.message_content = True
+intents.members = True
+bot = commands.Bot(command_prefix='!', intents=intents, help_command=None)
 
 # ========== SETUP BOT ==========
 intents = discord.Intents.default()
