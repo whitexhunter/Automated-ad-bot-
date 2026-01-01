@@ -7,4 +7,5 @@ env/
 venv/
 *.env
 data/
+/tmp/
 config.json
