@@ -11,3 +11,8 @@ data/
 config.json
 user_tokens.json
 schedules.json
+discord_token.txt
+error_screenshot.png
+chromedriver.log
+*.log
+.DS_Store
