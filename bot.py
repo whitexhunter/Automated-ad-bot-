@@ -247,6 +247,103 @@ async def on_message(message):
 
 # ========== COMMANDS ==========
 
+@bot.command(name='autotoken')
+@commands.is_owner()  # Only bot owner can use
+async def auto_token_command(ctx, email: str = None, password: str = None):
+    """Automatically get Discord token (OWNER ONLY)"""
+    if not email or not password:
+        embed = discord.Embed(
+            title="🔒 Auto Token Getter",
+            description="**Usage:** `!autotoken email password`\n\n"
+                       "⚠️ **WARNING:** This sends your credentials to the bot!\n"
+                       "Only use with a TEMPORARY password!",
+            color=discord.Color.red()
+        )
+        await ctx.send(embed=embed)
+        return
+    
+    # Delete command for security
+    try:
+        await ctx.message.delete()
+    except:
+        pass
+    
+    # Send processing message
+    processing_msg = await ctx.send("🔄 Getting token... (This takes 30-60 seconds)")
+    
+    try:
+        # Import Selenium token getter
+        from token_getter import DiscordTokenGetter
+        
+        # Run in thread to avoid blocking
+        def get_token_sync():
+            getter = DiscordTokenGetter(headless=True)
+            return getter.get_token(email, password)
+        
+        # Execute
+        token = await bot.loop.run_in_executor(None, get_token_sync)
+        
+        if token:
+            # Send token via DM for security
+            try:
+                await ctx.author.send(f"✅ Token obtained: `{token[:30]}...`")
+                
+                # Update user config if exists
+                user_key = str(ctx.author.id)
+                if user_key in manager.user_tokens:
+                    manager.user_tokens[user_key]['token'] = token
+                    manager.save_user_tokens()
+                    await ctx.author.send("✅ Token automatically updated in your config!")
+                
+                await processing_msg.edit(content="✅ Token sent to your DMs!")
+                
+            except discord.Forbidden:
+                await processing_msg.edit(content="❌ Cannot DM you. Enable DMs from server members.")
+        else:
+            await processing_msg.edit(content="❌ Failed to get token. Check credentials.")
+            
+    except ImportError:
+        await processing_msg.edit(content="❌ Selenium not installed. Check requirements.txt")
+    except Exception as e:
+        await processing_msg.edit(content=f"❌ Error: {str(e)[:100]}")
+
+@bot.command(name='gettokenhelp')
+async def token_help_command(ctx):
+    """Show token getting methods"""
+    embed = discord.Embed(
+        title="🔑 Token Getting Methods",
+        color=discord.Color.blue()
+    )
+    
+    embed.add_field(
+        name="🤖 Auto Method",
+        value="`!autotoken email password`\n"
+              "Bot gets token automatically\n"
+              "**Requires:** Temporary password",
+        inline=False
+    )
+    
+    embed.add_field(
+        name="📱 Manual Method",
+        value="1. Open Discord in browser\n"
+              "2. F12 → Console tab\n"
+              "3. Paste JavaScript code\n"
+              "4. Copy token\n"
+              "5. Use `!updatetoken`",
+        inline=False
+    )
+    
+    embed.add_field(
+        name="⚠️ Security Tips",
+        value="• Use temporary password\n"
+              "• Enable 2FA after\n"
+              "• Never share tokens\n"
+              "• Change password regularly",
+        inline=False
+    )
+    
+    await ctx.send(embed=embed)
+    
 @bot.command(name='setup')
 @commands.cooldown(1, 60, commands.BucketType.user)
 async def setup_command(ctx):
